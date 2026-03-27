@@ -22,9 +22,12 @@ export function TasteSelection({ onContinue }: TasteSelectionProps) {
   const [selected, setSelected] = useState<string[]>([])
 
   const toggleGenre = (id: string) => {
-    setSelected((prev) =>
-      prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id]
-    )
+    console.log("[v0] toggleGenre called with:", id, "current selected:", selected)
+    setSelected((prev) => {
+      const newSelected = prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id]
+      console.log("[v0] New selected state:", newSelected)
+      return newSelected
+    })
   }
 
   return (
@@ -41,6 +44,7 @@ export function TasteSelection({ onContinue }: TasteSelectionProps) {
       <div className="grid flex-1 grid-cols-2 gap-3">
         {genres.map((genre) => (
           <button
+            type="button"
             key={genre.id}
             onClick={() => {
               console.log("[v0] Genre clicked:", genre.id)
@@ -81,7 +85,10 @@ export function TasteSelection({ onContinue }: TasteSelectionProps) {
 
       <div className="mt-8">
         <Button
-          onClick={() => onContinue(selected)}
+          onClick={() => {
+            console.log("[v0] Continue clicked, selected:", selected)
+            onContinue(selected)
+          }}
           disabled={selected.length === 0}
           className="w-full py-6 text-base font-semibold"
           size="lg"
