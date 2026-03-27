@@ -3,14 +3,15 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { Flame, Theater, Eye, Heart, Sparkles, Film } from "lucide-react"
 
 const genres = [
-  { id: "action", name: "Action", gradient: "from-orange-600/40 to-red-800/40" },
-  { id: "drama", name: "Drama", gradient: "from-blue-600/40 to-indigo-800/40" },
-  { id: "thriller", name: "Thriller", gradient: "from-gray-600/40 to-slate-800/40" },
-  { id: "romance", name: "Romance", gradient: "from-pink-500/40 to-rose-700/40" },
-  { id: "indie", name: "Indie", gradient: "from-amber-500/40 to-yellow-700/40" },
-  { id: "documentary", name: "Documentary", gradient: "from-emerald-600/40 to-teal-800/40" },
+  { id: "action", name: "Action", gradient: "from-orange-600/40 to-red-800/40", icon: Flame },
+  { id: "drama", name: "Drama", gradient: "from-blue-600/40 to-indigo-800/40", icon: Theater },
+  { id: "thriller", name: "Thriller", gradient: "from-gray-600/40 to-slate-800/40", icon: Eye },
+  { id: "romance", name: "Romance", gradient: "from-pink-500/40 to-rose-700/40", icon: Heart },
+  { id: "indie", name: "Indie", gradient: "from-amber-500/40 to-yellow-700/40", icon: Sparkles },
+  { id: "documentary", name: "Documentary", gradient: "from-emerald-600/40 to-teal-800/40", icon: Film },
 ]
 
 interface TasteSelectionProps {
@@ -43,13 +44,14 @@ export function TasteSelection({ onContinue }: TasteSelectionProps) {
             key={genre.id}
             onClick={() => toggleGenre(genre.id)}
             className={cn(
-              "relative flex h-28 items-end justify-start overflow-hidden rounded-xl p-4 text-left transition-all duration-200",
+              "relative flex h-28 flex-col items-start justify-between overflow-hidden rounded-xl p-4 text-left transition-all duration-200",
               `bg-gradient-to-br ${genre.gradient}`,
               selected.includes(genre.id)
                 ? "ring-2 ring-primary ring-offset-2 ring-offset-background scale-[1.02]"
                 : "hover:scale-[1.01] hover:brightness-110"
             )}
           >
+            <genre.icon className="h-7 w-7 text-foreground/80" />
             <span className="text-lg font-semibold text-foreground">
               {genre.name}
             </span>
