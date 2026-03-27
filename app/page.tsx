@@ -3,10 +3,11 @@
 import { useState } from "react"
 import { TasteSelection } from "@/components/onboarding/taste-selection"
 import { PreferenceRefinement } from "@/components/onboarding/preference-refinement"
+import { SignupScreen } from "@/components/onboarding/signup-screen"
 import { HomePreview } from "@/components/onboarding/home-preview"
 import { ContentHero } from "@/components/onboarding/content-hero"
 
-type Screen = "taste" | "preference" | "home" | "hero"
+type Screen = "taste" | "preference" | "signup" | "home" | "hero"
 
 export default function OnboardingFlow() {
   const [currentScreen, setCurrentScreen] = useState<Screen>("taste")
@@ -18,10 +19,18 @@ export default function OnboardingFlow() {
   }
 
   const handlePreferenceComplete = () => {
-    setCurrentScreen("home")
+    setCurrentScreen("signup")
   }
 
   const handlePreferenceSkip = () => {
+    setCurrentScreen("signup")
+  }
+
+  const handleSignupComplete = () => {
+    setCurrentScreen("home")
+  }
+
+  const handleSignupSkip = () => {
     setCurrentScreen("home")
   }
 
@@ -47,6 +56,12 @@ export default function OnboardingFlow() {
         <PreferenceRefinement
           onContinue={handlePreferenceComplete}
           onSkip={handlePreferenceSkip}
+        />
+      )}
+      {currentScreen === "signup" && (
+        <SignupScreen
+          onContinue={handleSignupComplete}
+          onSkip={handleSignupSkip}
         />
       )}
       {currentScreen === "home" && (
