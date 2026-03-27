@@ -38,13 +38,23 @@ export function TasteSelection({ onContinue }: TasteSelectionProps) {
   const [selected, setSelected] = useState<string[]>([])
 
   const toggleGenre = (id: string) => {
-    setSelected((prev) =>
-      prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id]
-    )
+    console.log("[v0] toggleGenre called:", id)
+    setSelected((prev) => {
+      const newSelected = prev.includes(id) 
+        ? prev.filter((g) => g !== id) 
+        : [...prev, id]
+      console.log("[v0] New selected:", newSelected)
+      return newSelected
+    })
+  }
+
+  const handleContinue = () => {
+    console.log("[v0] Continue clicked, selected:", selected)
+    onContinue(selected)
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background px-6 pb-8 pt-16">
+    <div className="min-h-screen bg-background px-6 pb-8 pt-16">
       <div className="mb-10">
         <h1 className="mb-3 text-balance text-3xl font-bold tracking-tight text-foreground">
           What do you feel like watching?
@@ -54,7 +64,7 @@ export function TasteSelection({ onContinue }: TasteSelectionProps) {
         </p>
       </div>
 
-      <div className="grid flex-1 grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3">
         {genres.map((genre) => {
           const Icon = genre.icon
           const isSelected = selected.includes(genre.id)
@@ -64,7 +74,7 @@ export function TasteSelection({ onContinue }: TasteSelectionProps) {
               key={genre.id}
               onClick={() => toggleGenre(genre.id)}
               className={cn(
-                "relative flex h-28 flex-col items-start justify-between overflow-hidden rounded-xl p-4 text-left transition-all duration-200",
+                "relative flex h-28 flex-col items-start justify-between overflow-hidden rounded-xl p-4 text-left transition-all duration-200 cursor-pointer",
                 genreStyles[genre.id],
                 isSelected
                   ? "ring-2 ring-primary ring-offset-2 ring-offset-background scale-[1.02]"
@@ -88,7 +98,7 @@ export function TasteSelection({ onContinue }: TasteSelectionProps) {
       <div className="mt-8">
         <Button
           type="button"
-          onClick={() => onContinue(selected)}
+          onClick={handleContinue}
           disabled={selected.length === 0}
           className="w-full py-6 text-base font-semibold"
           size="lg"
