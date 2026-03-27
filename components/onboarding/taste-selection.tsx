@@ -4,31 +4,15 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Flame, Theater, Eye, Heart, Sparkles, Film, Check } from "lucide-react"
-import type { LucideIcon } from "lucide-react"
 
-interface Genre {
-  id: string
-  name: string
-  icon: LucideIcon
-}
-
-const genres: Genre[] = [
-  { id: "action", name: "Action", icon: Flame },
-  { id: "drama", name: "Drama", icon: Theater },
-  { id: "thriller", name: "Thriller", icon: Eye },
-  { id: "romance", name: "Romance", icon: Heart },
-  { id: "indie", name: "Indie", icon: Sparkles },
-  { id: "documentary", name: "Documentary", icon: Film },
+const genres = [
+  { id: "action", name: "Action", icon: Flame, bg: "bg-orange-600/40" },
+  { id: "drama", name: "Drama", icon: Theater, bg: "bg-indigo-600/40" },
+  { id: "thriller", name: "Thriller", icon: Eye, bg: "bg-slate-600/40" },
+  { id: "romance", name: "Romance", icon: Heart, bg: "bg-pink-500/40" },
+  { id: "indie", name: "Indie", icon: Sparkles, bg: "bg-amber-500/40" },
+  { id: "documentary", name: "Documentary", icon: Film, bg: "bg-emerald-600/40" },
 ]
-
-const genreStyles: Record<string, string> = {
-  action: "bg-orange-600/40",
-  drama: "bg-indigo-600/40",
-  thriller: "bg-slate-600/40",
-  romance: "bg-pink-500/40",
-  indie: "bg-amber-500/40",
-  documentary: "bg-emerald-600/40",
-}
 
 interface TasteSelectionProps {
   onContinue: (selected: string[]) => void
@@ -37,19 +21,15 @@ interface TasteSelectionProps {
 export function TasteSelection({ onContinue }: TasteSelectionProps) {
   const [selected, setSelected] = useState<string[]>([])
 
-  const toggleGenre = (id: string) => {
-    console.log("[v0] toggleGenre called:", id)
-    setSelected((prev) => {
-      const newSelected = prev.includes(id) 
-        ? prev.filter((g) => g !== id) 
-        : [...prev, id]
-      console.log("[v0] New selected:", newSelected)
-      return newSelected
-    })
+  function handleGenreClick(id: string) {
+    if (selected.includes(id)) {
+      setSelected(selected.filter((g) => g !== id))
+    } else {
+      setSelected([...selected, id])
+    }
   }
 
-  const handleContinue = () => {
-    console.log("[v0] Continue clicked, selected:", selected)
+  function handleContinue() {
     onContinue(selected)
   }
 
@@ -69,13 +49,19 @@ export function TasteSelection({ onContinue }: TasteSelectionProps) {
           const Icon = genre.icon
           const isSelected = selected.includes(genre.id)
           return (
-            <button
-              type="button"
+            <div
               key={genre.id}
-              onClick={() => toggleGenre(genre.id)}
+              onClick={() => handleGenreClick(genre.id)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  handleGenreClick(genre.id)
+                }
+              }}
               className={cn(
-                "relative flex h-28 flex-col items-start justify-between overflow-hidden rounded-xl p-4 text-left transition-all duration-200 cursor-pointer",
-                genreStyles[genre.id],
+                "relative flex h-28 cursor-pointer flex-col items-start justify-between rounded-xl p-4 transition-all duration-200",
+                genre.bg,
                 isSelected
                   ? "ring-2 ring-primary ring-offset-2 ring-offset-background scale-[1.02]"
                   : "hover:scale-[1.01] hover:brightness-110"
@@ -90,14 +76,13 @@ export function TasteSelection({ onContinue }: TasteSelectionProps) {
                   <Check className="h-4 w-4 text-primary-foreground" strokeWidth={3} />
                 </div>
               )}
-            </button>
+            </div>
           )
         })}
       </div>
 
       <div className="mt-8">
         <Button
-          type="button"
           onClick={handleContinue}
           disabled={selected.length === 0}
           className="w-full py-6 text-base font-semibold"
