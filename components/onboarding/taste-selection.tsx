@@ -3,16 +3,32 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { Flame, Theater, Eye, Heart, Sparkles, Film } from "lucide-react"
+import { Flame, Theater, Eye, Heart, Sparkles, Film, Check } from "lucide-react"
+import type { LucideIcon } from "lucide-react"
 
-const genres = [
-  { id: "action", name: "Action", gradient: "from-orange-600/40 to-red-800/40", icon: Flame },
-  { id: "drama", name: "Drama", gradient: "from-blue-600/40 to-indigo-800/40", icon: Theater },
-  { id: "thriller", name: "Thriller", gradient: "from-gray-600/40 to-slate-800/40", icon: Eye },
-  { id: "romance", name: "Romance", gradient: "from-pink-500/40 to-rose-700/40", icon: Heart },
-  { id: "indie", name: "Indie", gradient: "from-amber-500/40 to-yellow-700/40", icon: Sparkles },
-  { id: "documentary", name: "Documentary", gradient: "from-emerald-600/40 to-teal-800/40", icon: Film },
+interface Genre {
+  id: string
+  name: string
+  icon: LucideIcon
+}
+
+const genres: Genre[] = [
+  { id: "action", name: "Action", icon: Flame },
+  { id: "drama", name: "Drama", icon: Theater },
+  { id: "thriller", name: "Thriller", icon: Eye },
+  { id: "romance", name: "Romance", icon: Heart },
+  { id: "indie", name: "Indie", icon: Sparkles },
+  { id: "documentary", name: "Documentary", icon: Film },
 ]
+
+const genreStyles: Record<string, string> = {
+  action: "bg-orange-600/40",
+  drama: "bg-indigo-600/40",
+  thriller: "bg-slate-600/40",
+  romance: "bg-pink-500/40",
+  indie: "bg-amber-500/40",
+  documentary: "bg-emerald-600/40",
+}
 
 interface TasteSelectionProps {
   onContinue: (selected: string[]) => void
@@ -39,45 +55,39 @@ export function TasteSelection({ onContinue }: TasteSelectionProps) {
       </div>
 
       <div className="grid flex-1 grid-cols-2 gap-3">
-        {genres.map((genre) => (
-          <button
-            key={genre.id}
-            onClick={() => toggleGenre(genre.id)}
-            className={cn(
-              "relative flex h-28 flex-col items-start justify-between overflow-hidden rounded-xl p-4 text-left transition-all duration-200",
-              `bg-gradient-to-br ${genre.gradient}`,
-              selected.includes(genre.id)
-                ? "ring-2 ring-primary ring-offset-2 ring-offset-background scale-[1.02]"
-                : "hover:scale-[1.01] hover:brightness-110"
-            )}
-          >
-            <genre.icon className="h-7 w-7 text-foreground/80" />
-            <span className="text-lg font-semibold text-foreground">
-              {genre.name}
-            </span>
-            {selected.includes(genre.id) && (
-              <div className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-primary">
-                <svg
-                  className="h-4 w-4 text-primary-foreground"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={3}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </div>
-            )}
-          </button>
-        ))}
+        {genres.map((genre) => {
+          const Icon = genre.icon
+          const isSelected = selected.includes(genre.id)
+          return (
+            <button
+              type="button"
+              key={genre.id}
+              onClick={() => toggleGenre(genre.id)}
+              className={cn(
+                "relative flex h-28 flex-col items-start justify-between overflow-hidden rounded-xl p-4 text-left transition-all duration-200",
+                genreStyles[genre.id],
+                isSelected
+                  ? "ring-2 ring-primary ring-offset-2 ring-offset-background scale-[1.02]"
+                  : "hover:scale-[1.01] hover:brightness-110"
+              )}
+            >
+              <Icon className="h-7 w-7 text-foreground/80" />
+              <span className="text-lg font-semibold text-foreground">
+                {genre.name}
+              </span>
+              {isSelected && (
+                <div className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-primary">
+                  <Check className="h-4 w-4 text-primary-foreground" strokeWidth={3} />
+                </div>
+              )}
+            </button>
+          )
+        })}
       </div>
 
       <div className="mt-8">
         <Button
+          type="button"
           onClick={() => onContinue(selected)}
           disabled={selected.length === 0}
           className="w-full py-6 text-base font-semibold"
