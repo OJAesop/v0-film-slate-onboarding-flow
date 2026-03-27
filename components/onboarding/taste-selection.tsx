@@ -6,12 +6,12 @@ import { cn } from "@/lib/utils"
 import { Flame, Theater, Eye, Heart, Sparkles, Film } from "lucide-react"
 
 const genres = [
-  { id: "action", name: "Action", bgColor: "rgba(234, 88, 12, 0.4)", icon: Flame },
-  { id: "drama", name: "Drama", bgColor: "rgba(79, 70, 229, 0.4)", icon: Theater },
-  { id: "thriller", name: "Thriller", bgColor: "rgba(71, 85, 105, 0.4)", icon: Eye },
-  { id: "romance", name: "Romance", bgColor: "rgba(236, 72, 153, 0.4)", icon: Heart },
-  { id: "indie", name: "Indie", bgColor: "rgba(245, 158, 11, 0.4)", icon: Sparkles },
-  { id: "documentary", name: "Documentary", bgColor: "rgba(16, 185, 129, 0.4)", icon: Film },
+  { id: "action", name: "Action", gradient: "from-orange-600/40 to-red-800/40", icon: Flame },
+  { id: "drama", name: "Drama", gradient: "from-blue-600/40 to-indigo-800/40", icon: Theater },
+  { id: "thriller", name: "Thriller", gradient: "from-gray-600/40 to-slate-800/40", icon: Eye },
+  { id: "romance", name: "Romance", gradient: "from-pink-500/40 to-rose-700/40", icon: Heart },
+  { id: "indie", name: "Indie", gradient: "from-amber-500/40 to-yellow-700/40", icon: Sparkles },
+  { id: "documentary", name: "Documentary", gradient: "from-emerald-600/40 to-teal-800/40", icon: Film },
 ]
 
 interface TasteSelectionProps {
@@ -22,12 +22,9 @@ export function TasteSelection({ onContinue }: TasteSelectionProps) {
   const [selected, setSelected] = useState<string[]>([])
 
   const toggleGenre = (id: string) => {
-    console.log("[v0] toggleGenre called with:", id, "current selected:", selected)
-    setSelected((prev) => {
-      const newSelected = prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id]
-      console.log("[v0] New selected state:", newSelected)
-      return newSelected
-    })
+    setSelected((prev) =>
+      prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id]
+    )
   }
 
   return (
@@ -44,15 +41,11 @@ export function TasteSelection({ onContinue }: TasteSelectionProps) {
       <div className="grid flex-1 grid-cols-2 gap-3">
         {genres.map((genre) => (
           <button
-            type="button"
             key={genre.id}
-            onClick={() => {
-              console.log("[v0] Genre clicked:", genre.id)
-              toggleGenre(genre.id)
-            }}
-            style={{ backgroundColor: genre.bgColor }}
+            onClick={() => toggleGenre(genre.id)}
             className={cn(
               "relative flex h-28 flex-col items-start justify-between overflow-hidden rounded-xl p-4 text-left transition-all duration-200",
+              `bg-gradient-to-br ${genre.gradient}`,
               selected.includes(genre.id)
                 ? "ring-2 ring-primary ring-offset-2 ring-offset-background scale-[1.02]"
                 : "hover:scale-[1.01] hover:brightness-110"
@@ -85,10 +78,7 @@ export function TasteSelection({ onContinue }: TasteSelectionProps) {
 
       <div className="mt-8">
         <Button
-          onClick={() => {
-            console.log("[v0] Continue clicked, selected:", selected)
-            onContinue(selected)
-          }}
+          onClick={() => onContinue(selected)}
           disabled={selected.length === 0}
           className="w-full py-6 text-base font-semibold"
           size="lg"

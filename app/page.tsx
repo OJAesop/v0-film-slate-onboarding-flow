@@ -14,7 +14,6 @@ export default function OnboardingFlow() {
   const [selectedGenres, setSelectedGenres] = useState<string[]>([])
 
   const handleTasteComplete = (genres: string[]) => {
-    console.log("[v0] handleTasteComplete called with:", genres)
     setSelectedGenres(genres)
     setCurrentScreen("preference")
   }
