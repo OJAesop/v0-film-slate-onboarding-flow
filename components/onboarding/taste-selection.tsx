@@ -22,7 +22,6 @@ export function TasteSelection({ onContinue }: TasteSelectionProps) {
   const [selected, setSelected] = useState<string[]>([])
 
   function handleGenreClick(id: string) {
-    alert(`Clicked: ${id}`)
     if (selected.includes(id)) {
       setSelected(selected.filter((g) => g !== id))
     } else {
